@@ -3,6 +3,7 @@ import numpy as np
 import faiss
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 load_dotenv()
 api_key_gemini = os.getenv("api_gemini")
@@ -22,7 +23,7 @@ def ler_arquivo_em_chunks(caminho_arquivo, tamanho_chunk=500):
 
 def gerar_embeddings(textos):
     response = usuario_gemini.models.embed_content(
-        model="sentence-transformers/all-MiniLM-L6-v2",
+        model="models/text-embedding-004",
         contents=textos
     )
     embeddings = [embedding.values for embedding in response.embeddings]
@@ -58,7 +59,7 @@ prompt_completo = f"{prompt}\n\n{contexto_filtrado}\n\n{pergunta}"
 resposta = usuario_gemini.models.generate_content(
     model="gemini-2.5-flash",
     contents=prompt_completo,
-    temperature=0.3
+    config=types.GenerateContentConfig(temperature=0.3)
 )
 
 print("\nAtlas responde:")
